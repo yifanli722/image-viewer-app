@@ -6,13 +6,18 @@ const Banner = () => {
   const [file, setFile] = useState(null);
   const [error, setError] = useState(null);
   const [uploadBtnActive, setUploadBtnActive] = useState(false);
-  const [imageSrc, setImageSrc] = useState(null);
+  const [previewUrl, setImagePreviewUrl] = useState(null);
 
   const handleFileSelect = (event) => {
-    const temp = event.target.files[0]
-    setFile(temp);
-    setImageSrc(URL.createObjectURL(temp));
-    setUploadBtnActive(true)
+    const selectedFile = event.target.files[0]
+    if(previewUrl !== null) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    if(selectedFile.type === "image/jpeg" || selectedFile.type === "image/png") {
+      setFile(selectedFile);
+      setImagePreviewUrl(URL.createObjectURL(selectedFile));
+      setUploadBtnActive(true)
+    }
   };
 
 
@@ -25,14 +30,14 @@ const Banner = () => {
     };
 
     axios.post(`${process.env.REACT_APP_BASE_URL}/api/UploadImage`, file, config)
-      .then(response => {
-        console.log(response.data);
-        setUploadBtnActive(false)
-      })
-      .catch(error => {
-        console.error(error);
-        setError(error);
-      });
+    .then(response => {
+      console.log(response.data);
+      setUploadBtnActive(false)
+    })
+    .catch(error => {
+      console.error(error);
+      setError(error);
+    });
   };
 
   return (
@@ -45,7 +50,12 @@ const Banner = () => {
         <button disabled={!uploadBtnActive} className="upload-button" onClick={handleUpload}>Upload Image</button>
       </div>
       {error && <div style={{ color: 'red' }} className="error">{error.message}</div>}
-      {file && <img style={{ maxWidth: "500px", maxHeight: "500px" }} id="ItemPreview" src={imageSrc} alt="Selected file"></img>}
+      {file &&
+      <div>
+        <h3> Preview Thumbnail </h3> 
+        <img style={{ width: "500px", height: "750px", maxWidth: "1000px", maxHeight: "1500px" }} id="ItemPreview" src={previewUrl} alt="Selected file"></img>
+      </div>
+      }
     </div>
   );
 };
