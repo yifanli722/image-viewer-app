@@ -6,3 +6,20 @@
 .error {
   color: 'red';
 }
+
+.loading-spinner {
+  width: 20px; /* adjust the width and height of the spinner */
+  height: 20px;
+  animation: spin 2s infinite linear;
+  animation-duration: 750ms;
+  transform-origin: center center;
+}
+/* Keyframe animation to rotate the spinner */
+@keyframes spin {
+  from {
+      transform: rotate(0deg);
+  }
+  to {
+      transform: rotate(360deg);
+  }
+}
