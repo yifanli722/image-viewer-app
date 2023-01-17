@@ -7,6 +7,7 @@ const Banner = () => {
   const [error, setError] = useState(null);
   const [uploadBtnActive, setUploadBtnActive] = useState(false);
   const [previewUrl, setImagePreviewUrl] = useState(null);
+  const [retrieveUrl, setRetrieveUrl] = useState(null);
 
   const handleFileSelect = (event) => {
     const selectedFile = event.target.files[0]
@@ -32,6 +33,8 @@ const Banner = () => {
     axios.post(`${process.env.REACT_APP_BASE_URL}/api/UploadImage`, file, config)
     .then(response => {
       console.log(response.data);
+      let sha256 = response.data.insertedSha256;
+      setRetrieveUrl(`${process.env.REACT_APP_BASE_URL}/api/RetrieveImage/${sha256}`);
       setUploadBtnActive(false)
     })
     .catch(error => {
@@ -43,7 +46,7 @@ const Banner = () => {
   return (
     <div className="banner">
       <div className="banner-content">
-        <h1>Upload an Image</h1>
+        <h1>Select Image to Upload</h1>
       </div>
       <div className="banner-actions">
         <input type="file" onChange={handleFileSelect} />
@@ -55,6 +58,10 @@ const Banner = () => {
         <h3> Preview Thumbnail </h3> 
         <img style={{ width: "500px", height: "750px", maxWidth: "1000px", maxHeight: "1500px" }} id="ItemPreview" src={previewUrl} alt="Selected file"></img>
       </div>
+      }
+      {
+        retrieveUrl &&
+        <a href={retrieveUrl}> Image Share Link </a>
       }
     </div>
   );
