@@ -23,7 +23,7 @@ const Banner = () => {
     if(previewUrl !== null) {
       URL.revokeObjectURL(previewUrl);
     }
-    if(selectedFile.type === "image/jpeg" || selectedFile.type === "image/png") {
+    if(selectedFile && (selectedFile.type === "image/jpeg" || selectedFile.type === "image/png")) {
       setFile(selectedFile);
       setImagePreviewUrl(URL.createObjectURL(selectedFile));
       setUploadBtnActive(true)
